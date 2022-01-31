@@ -5,27 +5,30 @@ import android.content.DialogInterface
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.core.content.res.ResourcesCompat
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.javimay.postsapp.R
 import com.javimay.postsapp.data.model.Post
 import com.javimay.postsapp.data.model.User
 import com.javimay.postsapp.databinding.FragmentPostBinding
 import com.javimay.postsapp.ui.adapters.PostsRecyclerViewAdapter
+import com.javimay.postsapp.ui.callbacks.SwipeToDeleteCallback
 import com.javimay.postsapp.ui.home.HomeFragmentDirections
 import com.javimay.postsapp.utils.toParcelable
 import dagger.hilt.android.AndroidEntryPoint
+
 
 @AndroidEntryPoint
 class PostFragment : Fragment() {
@@ -169,6 +172,9 @@ class PostFragment : Fragment() {
         showLoading(false)
         showRefreshInfo(false)
         binding.srlRefresh.isRefreshing = false
+        val callback: ItemTouchHelper.Callback = SwipeToDeleteCallback(adapter)
+        val touchHelper = ItemTouchHelper(callback)
+        touchHelper.attachToRecyclerView(binding.rvPosts)
     }
 
     private fun goToContentPostFragment(post: Post) {
@@ -179,10 +185,12 @@ class PostFragment : Fragment() {
     }
 
     override fun onDestroy() {
-        super.onPause()
+        super.onDestroy()
         postFragmentViewModel.loading.removeObserver(observer)
         postFragmentViewModel.cancelJobs()
     }
+
+
 
 
 }

@@ -29,6 +29,14 @@ class PostLocalDataSourceImpl @Inject constructor(
         }
     }
 
+    override suspend fun deletePostById(postId: Int): Int {
+        var postDeleted = 0
+        CoroutineScope(Dispatchers.IO).launch {
+            postDeleted = postDao.deletePostById(postId)
+        }
+        return postDeleted
+    }
+
     override suspend fun clearAll(): Int {
        var rowsDeleted = 0
         CoroutineScope(Dispatchers.IO).launch {

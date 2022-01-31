@@ -6,4 +6,5 @@ interface PostRepository {
     suspend fun getPosts(): List<Post>
     suspend fun updatePost(post: Post)
     suspend fun deleteAllPosts()
+    suspend fun deletePostById(postId: Int)
 }

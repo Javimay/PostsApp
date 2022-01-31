@@ -1,4 +1,4 @@
-package com.javimay.postapp
+package com.javimay.postsapp
 
 import org.junit.Test
 

@@ -24,11 +24,10 @@ class PostRepositoryImpl @Inject constructor(
 
     override suspend fun updatePost(post: Post){
         try {
-            postLocalDataSource.updatePost(post)
-            delay(5000)
             val postList = getPostsFromCache().toMutableList()
             postList[post.id-1] = post
             postCacheDataSource.savePostsToCache(postList.toList())
+            postLocalDataSource.updatePost(post)
         } catch (e: Exception) {
             Log.e(TAG, e.message.toString())
         }
@@ -41,6 +40,15 @@ class PostRepositoryImpl @Inject constructor(
             } catch (e: Exception) {
                 Log.e(TAG, e.message.toString())
             }
+    }
+
+    override suspend fun deletePostById(postId: Int) {
+        try {
+            val rowsDeleted = postLocalDataSource.deletePostById(postId)
+            Log.i(TAG, "Row deleted: $rowsDeleted")
+        } catch (e: Exception) {
+            Log.e(TAG, e.message.toString())
+        }
     }
 
     private suspend fun getPostsFromCache(): List<Post> {

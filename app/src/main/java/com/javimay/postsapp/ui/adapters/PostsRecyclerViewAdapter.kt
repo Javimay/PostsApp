@@ -7,17 +7,19 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.javimay.postsapp.R
 import com.javimay.postsapp.data.model.Post
+import com.javimay.postsapp.ui.callbacks.ItemTouchHelperAdapter
+import java.util.*
 
 
 class PostsRecyclerViewAdapter(
     private var postsList: MutableList<Post>,
     private val context: Context?,
     private val favorites: Boolean
-) :
-    RecyclerView.Adapter<PostsRecyclerViewAdapter.MyViewHolder>() {
+) :RecyclerView.Adapter<PostsRecyclerViewAdapter.MyViewHolder>(), ItemTouchHelperAdapter {
     var onItemClick: ((position:Int) -> Unit)? = null
     private var mInflater: LayoutInflater = LayoutInflater.from(context)
 
@@ -62,5 +64,15 @@ init {
                 onItemClick?.invoke(position)
             }
         }
+    }
+
+    override fun onItemMove(fromPosition: Int, toPosition: Int) {
+       //No implementation needed
+    }
+
+    override fun onItemDismiss(position: Int) {
+        postsList.removeAt(position)
+        notifyItemRemoved(position)
+        Toast.makeText(context, "item deleted", Toast.LENGTH_LONG).show()
     }
 }
